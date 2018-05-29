@@ -1,0 +1,467 @@
+﻿<!DOCTYPE html>
+<html class="ff">
+<head>
+    <title>Đo chất lượng không khí</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="http://js.arcgis.com/3.22/esri/themes/calcite/dijit/calcite.css" />
+    <link rel="stylesheet" href="http://js.arcgis.com/3.22/esri/css/esri.css" />
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+    <!-- front -->
+    <script type="text/javascript" src="javascript/jquery-3.2.1.js"></script>
+    <script type="text/javascript" src="javascript/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="web-fonts-with-css/css/fontawesome-all.min.css">
+    <link rel="canonical" href="http://www.example.com" />
+    
+    <style>
+        #codeseonet 
+        {
+            /* font-size: 20px;
+            padding: 10px;
+            border-radius: 10px */
+        }
+    </style>
+
+    <script type="text/javascript" src="https://js.arcgis.com/3.22/"></script>
+    <script type="text/javascript" src="javascript/mapjs.js"></script>
+</head>
+<body class="calcite ff" >  
+    <!-- <div data-dojo-type="dijit/layout/BorderContainer" design='headline' gutters="false" class="ff">
+        <div data-dojo-type="dijit/layout/ContentPane" region='top' style="height:50px">
+            top
+        </div>
+        <div data-dojo-type="dijit/layout/ContentPane" region='left' style="width:300px">
+            left
+        </div>
+        <div data-dojo-type="dijit/layout/ContentPane" region='center'>
+            <span data-dojo-type="dijit/Toolbar">
+                <input type="button" data-dojo-type="dijit/form/ToggleButton" iconclass="my-identify" title="Thông tin" id="identify" onclick="toolbar_onItemClick" />
+                <input type="button" data-dojo-type="dijit/form/Button" iconclass="my-vietnam" title="Việt Nam" id="vietnam" onclick="toolbar_onItemClick" />
+                <input type="button" data-dojo-type="dijit/form/ToggleButton" iconclass="my-measure" title="Measure" id="measure" onclick="toolbar_onItemClick" />
+            </span>
+            <div id="divMap" class="ff">
+                
+            </div>
+        </div>
+        <div data-dojo-type="dijit/layout/ContentPane" region='bottom' style="width:20px; text-align:right">
+            <span id="labStatus">Status</span>
+        </div>
+     </div> -->
+     
+    <div id="wrapper">
+        <div id="header">
+            <div class="top-header clearfix navbar-fixed-top">
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-4" id="header-text">
+                    <span>Chất lượng không khí Hà Nội</span>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3" id="share">
+                        <iframe src="https://www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2F%25C4%2590o-ch%25E1%25BA%25A5t-l%25C6%25B0%25E1%25BB%25A3ng-kh%25C3%25B4ng-kh%25C3%25AD-1653913354676044%2F%3Fmodal%3Dadmin_todo_tour&width=450&layout=standard&action=like&size=small&show_faces=true&share=true&height=80&appId" width="112" height="25" style="border:none;overflow:hidden; padding-top: 1px" scrolling="no" frameborder="0" allowTransparency="true">
+                        </iframe>
+                        <g:plusone size="tall"></g:plusone>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-5 col-lg-5" id="search">
+                    <!-- <div class="col-md-7" >
+                        <div id="search_input"></div>
+                        <i class="glyphicon glyphicon-search"></i>
+                        <input type="text" id="search_input" name="Search" placeholder="Nhập địa điểm">
+                    </div> -->
+                    <div class="input-group col-md-8">
+                        <input type="text" class="form-control" id="inputGroupSuccess3" placeholder="Search địa điểm" style="height: 32px;">
+                        <span class="input-group-addon " style="color: #0086c8; cursor: pointer;"><i class="fas fa-search"></i></span>
+                    </div>
+                    <div class="col-md-4 pull-right" id="clock" style="margin-top: -31px;">
+                        
+                    </div> 
+                </div>
+            </div>
+            <!-- END top-header -->
+            <div class="title-header text-center">
+                <div class="container">
+                    <span class="on">Ô nhiễm không khí Hà Nội: </span> <span>Chỉ số chất lượng không khí thời gian thực (AQI)</span>
+                </div>
+            </div>
+            <!-- END title-header -->
+            <div class="menu">
+                <div class="container">
+                    <ul class="nav navbar-nav list-inline">
+                            <li><a href="index.html">Trang chủ</a></li>
+                            <li><a href="javascript:WebSocketTest()">Test WebSocket</a></li>
+                            <li><a href="#">Mê Linh</a></li>
+                            <li><a href="#">Bắc Từ Liêm</a></li>
+                            <li><a href="#">Đống Đa</a></li>
+                            <li><a href="#">Tây Hồ</a></li>
+                            <li><a href="#" id="test"><i class="glyphicon glyphicon-map-marker"></i> Vị trí của bạn</a></li>
+                            <li><a href="#search-city_menu" id="menu_search"><i class="glyphicon glyphicon-search"></i> Tìm kiếm địa điểm</a></li>
+                    </ul>
+                </div>
+                
+            </div>
+            <!-- END menu -->
+        </div> 
+        <!-- END HEADER -->
+        
+        <div id="content">
+            <div id="search_content" class="clearfix" style="border-bottom:  1px solid #ccc;background: #f0f0f0;">
+                <div class="col-md-6 col-md-push-3 col-md-pull-3">
+                    <div class="form-group" id="search_esri" style="padding-top: 5px; margin-bottom:  5px;">
+                        <input type="text" class="form-control" id="exampleInputPlace" placeholder="Search địa điểm">
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="wp-map clearfix">
+                    <div class="pull-left col-md-6">
+                        <div class="citymain">
+                            <div class="box1">
+                                Chỉ số
+                            </div>
+                            <div class="box2">
+                                Thống kê
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END citymain -->
+                    <div class="pull-right col-md-6">
+                        <div class="map" id="r_map">
+                            
+                        </div>
+                    </div>
+                    <!-- END map -->
+                </div>
+                <!-- END wp-map -->
+            </div>
+            <div class="forecast">
+                <div class="container">
+                    <div class="wp-forecast">
+                        <center>
+                            <span class="title-for">Dự báo chất lượng không khí</span> 
+                        </center>
+                        <div class="weather">
+                            <div class="week">                                   
+                                <svg width="100%" height="100%" version="1.1" viewBox="0 0 64 52" style="filter: transform-origin: 50% 50% 0px;">
+                                    <g>
+                                        <path fill="#ff9933" d="M47.165,51.322H16.834c-7.142,0-12.952-5.81-12.952-12.952c0-6.042,4.264-11.29,10.076-12.615 c-0.025-0.298-0.036-0.584-0.036-0.861c0-6.736,5.479-12.216,12.215-12.216c4.756,0,8.986,2.697,11.01,6.941 c5.152-0.822,9.957,1.677,12.398,6.033c6.063,1.131,10.571,6.503,10.571,12.718C60.117,45.513,54.308,51.322,47.165,51.322z">
+
+                                        </path>
+                                        <text text-anchor="middle" font-family="serif" font-size="12" y="42" x="32" fill="#000000">
+                                            SUN 18
+                                        </text
+                                    ></g>
+                                </svg>
+                                <font>31 ° C</font><br>
+                                <small><font>23 ° C</font></small>
+                            </div>
+                            <div class="week">                                   
+                                <svg width="100%" height="100%" version="1.1" viewBox="0 0 64 52" style="filter: transform-origin: 50% 50% 0px;">
+                                    <i class="glyphicon glyphicon-cloud">SUN 18</i>
+                                </svg>
+                                <font>31 ° C</font><br>
+                                <small><font>23 ° C</font></small>
+                            </div>
+                            <div class="week">                                   
+                                <svg width="100%" height="100%" version="1.1" viewBox="0 0 64 52" style="filter: transform-origin: 50% 50% 0px;">
+                                    <g>
+                                        <path fill="#ff9933" d="M47.165,51.322H16.834c-7.142,0-12.952-5.81-12.952-12.952c0-6.042,4.264-11.29,10.076-12.615 c-0.025-0.298-0.036-0.584-0.036-0.861c0-6.736,5.479-12.216,12.215-12.216c4.756,0,8.986,2.697,11.01,6.941 c5.152-0.822,9.957,1.677,12.398,6.033c6.063,1.131,10.571,6.503,10.571,12.718C60.117,45.513,54.308,51.322,47.165,51.322z">
+
+                                        </path>
+                                        <text text-anchor="middle" font-family="serif" font-size="12" y="42" x="32" fill="#000000">
+                                            SUN 18
+                                        </text
+                                    ></g>
+                                </svg>
+                                <font>31 ° C</font><br>
+                                <small><font>23 ° C</font></small>
+                            </div>
+                            <div class="week">                                   
+                                <svg width="100%" height="100%" version="1.1" viewBox="0 0 64 52" style="filter: transform-origin: 50% 50% 0px;">
+                                    <g>
+                                        <path fill="#ff9933" d="M47.165,51.322H16.834c-7.142,0-12.952-5.81-12.952-12.952c0-6.042,4.264-11.29,10.076-12.615 c-0.025-0.298-0.036-0.584-0.036-0.861c0-6.736,5.479-12.216,12.215-12.216c4.756,0,8.986,2.697,11.01,6.941 c5.152-0.822,9.957,1.677,12.398,6.033c6.063,1.131,10.571,6.503,10.571,12.718C60.117,45.513,54.308,51.322,47.165,51.322z">
+
+                                        </path>
+                                        <text text-anchor="middle" font-family="serif" font-size="12" y="42" x="32" fill="#000000">
+                                            SUN 18
+                                        </text
+                                    ></g>
+                                </svg>
+                                <font>31 ° C</font><br>
+                                <small><font>23 ° C</font></small>
+                            </div>
+                            <div class="week">                                   
+                                <svg width="100%" height="100%" version="1.1" viewBox="0 0 64 52" style="filter: transform-origin: 50% 50% 0px;">
+                                    <g>
+                                        <path fill="#ff9933" d="M47.165,51.322H16.834c-7.142,0-12.952-5.81-12.952-12.952c0-6.042,4.264-11.29,10.076-12.615 c-0.025-0.298-0.036-0.584-0.036-0.861c0-6.736,5.479-12.216,12.215-12.216c4.756,0,8.986,2.697,11.01,6.941 c5.152-0.822,9.957,1.677,12.398,6.033c6.063,1.131,10.571,6.503,10.571,12.718C60.117,45.513,54.308,51.322,47.165,51.322z">
+
+                                        </path>
+                                        <text text-anchor="middle" font-family="serif" font-size="12" y="42" x="32" fill="#000000">
+                                            SUN 18
+                                        </text
+                                    ></g>
+                                </svg>
+                                <font>31 ° C</font><br>
+                                <small><font>23 ° C</font></small>
+                            </div>
+                            <div class="week">                                   
+                                <svg width="100%" height="100%" version="1.1" viewBox="0 0 64 52" style="filter: transform-origin: 50% 50% 0px;">
+                                    <g>
+                                        <path fill="#ff9933" d="M47.165,51.322H16.834c-7.142,0-12.952-5.81-12.952-12.952c0-6.042,4.264-11.29,10.076-12.615 c-0.025-0.298-0.036-0.584-0.036-0.861c0-6.736,5.479-12.216,12.215-12.216c4.756,0,8.986,2.697,11.01,6.941 c5.152-0.822,9.957,1.677,12.398,6.033c6.063,1.131,10.571,6.503,10.571,12.718C60.117,45.513,54.308,51.322,47.165,51.322z">
+
+                                        </path>
+                                        <text text-anchor="middle" font-family="serif" font-size="12" y="42" x="32" fill="#000000">
+                                            SUN 18
+                                        </text
+                                    ></g>
+                                </svg>
+                                <font>31 ° C</font><br>
+                                <small><font>23 ° C</font></small>
+                            </div>
+                            <div class="week">                                   
+                                <svg width="100%" height="100%" version="1.1" viewBox="0 0 64 52" style="filter: transform-origin: 50% 50% 0px;">
+                                    <g>
+                                        <path fill="#ff9933" d="M47.165,51.322H16.834c-7.142,0-12.952-5.81-12.952-12.952c0-6.042,4.264-11.29,10.076-12.615 c-0.025-0.298-0.036-0.584-0.036-0.861c0-6.736,5.479-12.216,12.215-12.216c4.756,0,8.986,2.697,11.01,6.941 c5.152-0.822,9.957,1.677,12.398,6.033c6.063,1.131,10.571,6.503,10.571,12.718C60.117,45.513,54.308,51.322,47.165,51.322z">
+
+                                        </path>
+                                        <text text-anchor="middle" font-family="serif" font-size="12" y="42" x="32" fill="#000000">
+                                            SUN 18
+                                        </text
+                                    ></g>
+                                </svg>
+                                <font>31 ° C</font><br>
+                                <small><font>23 ° C</font></small>
+                            </div>
+                        </div>
+                        <hr class="abc">
+                        <div class="forcastview">
+                            <center>
+                                Biểu đồ gió, khí và nhiệt độ
+                            </center>
+                            
+                        </div>
+                    </div>
+                    <!-- END wp-forecast -->
+                </div>
+            </div>
+            <!-- END forecast -->
+            <div class="search-city" id="search-city_menu">
+                <div class="title-search-city">
+                    <center>
+                        <span class="gl-title">
+                            Tìm kiếm một thành phố khác?
+                        </span>
+                    </center>
+                </div>
+                <div class="container">
+                    <div class="view-search clearfix">
+                        <div class="form-group form-group-sm col-md-12 full-page-search">
+                            <label class="col-sm-12 control-label" for="formGroupInputSmall">Nhập tên thành phố</label><br>
+                            <label class="col-sm-12 control-label" for="formGroupInputSmall"> ↓ ↓ ↓ </label><br>
+                            <div class="input-group col-sm-12" style=" padding-left: 350px; padding-right: 350px;">
+                                    <input type="text" class="form-control" id="inputGroupSuccess3" width="25px;">
+                                    <span class="input-group-addon " style="color: #0086c8;"><i class="fas fa-search"></i></span>
+                            </div>
+                            <button type="button" class="btn btn-default" id="btn_local">Hoặc để chúng tôi tìm trạm giám sát chất lượng không khí gần nhất của bạn <i class="glyphicon glyphicon-map-marker"></i></button>
+                        </div>
+                    </div>
+                    <!-- END view-search -->
+                    <div class="history">
+                        <center>
+                            <span class="title-history">
+                                Các trạm đã ghé thăm trước đây:
+                            </span>
+                        </center>
+                        <div class="history-city">
+                            <center>
+                                <span>Hà Nội</span>
+                            </center>
+                        </div>  
+                        <div class="history-city">
+                            <center>
+                                <span>Hà Nội</span>
+                            </center>
+                        </div>  
+                        <div class="history-city">
+                            <center>
+                                <span>Hà Nội</span>
+                            </center>
+                        </div>   
+                    </div>
+                </div>
+            </div>
+            <!-- END search-city -->
+            <div class="about">
+                <div class="title-about">
+                    <center>
+                        <span class="gl-title">
+                            Các mức chất lượng không khí
+                        </span>
+                    </center>
+                </div>
+                <div class="container">
+                    <table class="table table-bordered" style="margin-top: 15px;">
+                        <thead>
+                            <tr>
+                                <th style=" padding: 26px;">AQI</th>
+                                <th>Mức ô nhiễm không khí</th>
+                                <th style="padding-bottom: 26px">Ý nghĩa sức khỏe</th>
+                                <th style="padding-bottom: 26px;">Báo cáo cảnh báo (đối với PM2.5)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background: #009966; color: #fff;">
+                                <td>0 - 50</td>
+                                <td>Tốt</td>
+                                <td>
+                                    Chất lượng không khí được coi là đạt yêu cầu, và ô nhiễm không khí gây ra ít hoặc không có rủi ro
+                                </td>
+                                <td>Không ai</td>
+                            </tr>
+                            <tr style="background: #ffde33;">
+                                <td>51 - 100</td>
+                                <td>Vừa phải</td>
+                                <td>
+                                    Chất lượng không khí có thể chấp nhận; tuy nhiên, đối với một số chất gây ô nhiễm có thể có một mối quan tâm sức khoẻ vừa phải đối với một số rất nhỏ những người nhạy cảm bất thường với ô nhiễm không khí.
+                                </td>
+                                <td>
+                                    Trẻ em và người lớn hoạt động, và những người có bệnh hô hấp, như hen suyễn, nên hạn chế gắng sức ngoài trời kéo dài.
+                                </td>
+                            </tr>
+                            <tr style="background: #ff9933;">
+                                <td>101 - 200</td>
+                                <td>Không khỏe mạnh cho các nhóm Nhạy cảm</td>
+                                <td>
+                                    Mọi người có thể bắt đầu trải nghiệm những ảnh hưởng về sức khoẻ; thành viên của các nhóm nhạy cảm có thể gặp nhiều ảnh hưởng nghiêm trọng đến sức khoẻ
+
+                                </td>
+                                <td>
+                                    Trẻ em hoạt động và người lớn, và những người có bệnh hô hấp, như hen suyễn, nên tránh gắng gắng ngoài trời kéo dài; mọi người khác, đặc biệt là trẻ em, nên hạn chế nỗ lực ngoài trời kéo dài
+                                </td>
+                            </tr>
+                            <tr style="background: #cc0033;  color: #fff;">
+                                <td>201 - 300</td>
+                                <td>Không khỏe mạnh</td>
+                                <td>
+                                    Mọi người có thể bắt đầu trải nghiệm những ảnh hưởng về sức khoẻ; thành viên của các nhóm nhạy cảm có thể gặp nhiều ảnh hưởng nghiêm trọng đến sức khoẻ
+                                </td>
+                                <td>
+                                    Trẻ em hoạt động và người lớn, và những người có bệnh hô hấp, như hen suyễn, nên tránh gắng gắng ngoài trời kéo dài; mọi người khác, đặc biệt là trẻ em, nên hạn chế nỗ lực ngoài trời kéo dài
+                                </td>
+                            </tr>
+                            <!-- <tr style="background: #660099; color: #fff;">
+                                <td>201 - 300</td>
+                                <td>Rất không lành mạnh</td>
+                                <td>
+                                        Cảnh báo sức khoẻ của các điều kiện khẩn cấp. Toàn bộ dân số có nhiều khả năng bị ảnh hưởng hơn.
+                                </td>
+                                <td>
+                                        Trẻ em hoạt động và người lớn, và những người có bệnh hô hấp, như hen suyễn, nên tránh tất cả các nỗ lực ngoài trời; mọi người khác, đặc biệt là trẻ em, nên hạn chế nỗ lực ngoài trời.
+                                </td>
+                            </tr> -->
+                            <tr style="background: #7e0023; color: #fff;">
+                                <td>300+</td>
+                                <td>Nguy hiểm</td>
+                                <td>Cảnh báo y tế: mọi người đều có thể gặp những ảnh hưởng nghiêm trọng về sức khoẻ</td>
+                                <td>Mọi người nên tránh tất cả các nỗ lực ngoài trời</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- END about -->
+        </div>
+        <div id="footer" >
+            <div class="top-footer"> 
+                <!--  navbar-fixed-bottom -->
+                <div class="container">
+                    <ul class="nav navbar-nav list-inline">
+                        <li><a href="">Home</a></li>
+                        <li><a href="">Mask</a></li>
+                        <li><a href="">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="container">
+                <div class="footer-content clearfix">
+                    <div class="col-md-4">
+                        <h3>Giới thiệu về dự án</h3>
+                        <ul>
+                            <li><a href="" title=""> <i class="fa fa-check"></i> Câu hỏi thường gặp</a></li>
+                            <li><a href="" title=""> <i class="fa fa-check"></i> Phương thức thanh toán</a></li>
+                            <li><a href="" title=""> <i class="fa fa-check"></i> Hướng dẫn đặt hàng </a></li>
+                            <li><a href="" title=""> <i class="fa fa-check"></i> Trung tâm bảo hành  </a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h3>Giới thiệu về dự án</h3>
+                        <ul>
+                            <li><a href="" title=""> <i class="fa fa-check"></i> Câu hỏi thường gặp</a></li>
+                            <li><a href="" title=""> <i class="fa fa-check"></i> Phương thức thanh toán</a></li>
+                            <li><a href="" title=""> <i class="fa fa-check"></i> Hướng dẫn đặt hàng </a></li>
+                            <li><a href="" title=""> <i class="fa fa-check"></i> Trung tâm bảo hành  </a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h3>Giới thiệu về dự án</h3>
+                        <ul>
+                            <li><a href="" title=""> <i class="fa fa-check"></i> Câu hỏi thường gặp</a></li>
+                            <li><a href="" title=""> <i class="fa fa-check"></i> Phương thức thanh toán</a></li>
+                            <li><a href="" title=""> <i class="fa fa-check"></i> Hướng dẫn đặt hàng </a></li>
+                            <li><a href="" title=""> <i class="fa fa-check"></i> Trung tâm bảo hành  </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <a class="btn-top" href="javascript:void(0);" title="Top" style="display: inline;"></a>
+        </div>
+    </div>
+    <script type="text/javascript" src="javascript/js.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAyjrKL25otfC6QLCtuALxrpC2OZAXWk3s&libraries=places" async defer
+    type="text/javascript"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <!-- &callback=initMap -->
+    <script type="text/javascript">
+        (function() {
+          var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+          po.src = 'https://apis.google.com/js/plusone.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+        })();
+
+        $(document).ready(function(){ 
+            $(function() {
+                $hidenitem = $("#search_content");
+                $hidenitem.hide();
+                $itemproduct = $("#menu_search");
+                $itemproduct.hover(function(){
+                    $(this).children("#search_content").hide(100);
+                },function(){
+                    $hidenitem.show(500).delay(30000).hide(500);
+                    
+                })
+                
+            })
+            $(".btn-top").hide();
+            if($(".btn-top").length > 0)
+            {
+                $(window).scroll(function () {
+                    var e = $(window).scrollTop();
+                    if (e > 700) {
+                        $(".btn-top").show()
+                    } else {
+                        $(".btn-top").hide()
+                    }
+                });
+                $(".btn-top").click(function () {
+                    $('body,html').animate({
+                        scrollTop: 0
+                    })
+                })
+            }		
+        });
+      </script>
+
+</body>
+</html>
+
+
+
+        

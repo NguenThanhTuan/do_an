@@ -1,0 +1,332 @@
+.ff
+{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+.my-identify 
+{    background: url("identify.png") no-repeat;
+    height: 25px; width: 25px;
+}
+.my-vietnam
+{    background: url("vietnam.png") no-repeat;
+    height: 25px; width: 25px;
+}
+.my-measure 
+{    background: url("measure.png") no-repeat;
+    height: 25px; width: 25px;
+}
+
+/* Global CSS */
+.gl-title
+{
+    font-size: 30px;
+    line-height: 50px;
+    font-style: italic;
+    font-weight: 600;
+}
+
+/* END Global CSS */
+
+/*ESRI CSS*/
+.arcgisSearch .searchGroup .searchInput
+{
+    padding: 4px 24px 6px 12px;
+}
+.arcgisSearch .searchBtn
+{
+    padding: 5px 12px;
+}
+.arcgisSearch .searchClear
+{
+    height: 29px;
+}
+#search_content .arcgisSearch .searchGroup .searchInput
+{
+    padding-right: 385px;
+}
+@-webkit-keyframes
+       pulse
+      {
+        0%
+        {
+          opacity: 1.0;
+
+        }
+        45%
+        {
+          opacity: .20;
+
+        }
+        100%
+        {
+          opacity: 1.0;
+
+        }
+      }
+     @-moz-keyframes
+       pulse
+      {
+        0%
+        {
+          opacity: 1.0;
+        }
+        45%
+        {
+          opacity: .20;
+
+        }
+        100%
+        {
+          opacity: 1.0;
+        }
+      }
+#r_map_graphics_layer, #graphicsLayer1_layer
+{
+    -webkit-animation-duration: 3s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-name: pulse;
+    -moz-animation-duration: 3s;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-name: pulse;
+  }
+/* END ESRI CSS */
+
+
+/* FRONTEND */
+/* Header */
+
+#header
+{
+    
+    
+}
+#header .top-header #share
+{
+    padding-top: 5px;
+}
+.top-header
+{
+    height: 32px;
+    background: #0086c8;
+    width: 100%;
+    /* position: fixed; */
+    z-index: 9999;
+}
+#header .top-header #search > .col-md-7
+{
+    padding-top: 4px;
+}
+#header .top-header #search .col-md-7 i
+{
+    color: #fff;
+    transform: rotate(90deg);
+    font-size: 17px;
+}
+#header .top-header #search .col-md-7 #search_input
+{
+    outline: none;
+    color: #fff;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #fff;
+}
+#search_input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: #ccc;
+    font-style: italic;
+}
+#search_input::-moz-placeholder { /* Firefox 19+ */
+    color: #fff;
+    font-style: italic;
+}
+#header .top-header #header-text span
+{
+    color: #fff;
+    font-size: 21px;
+    font-weight: initial;
+}
+#clock #codeseonet
+{
+    background: #0086c8;
+    border:  none;
+    outline:  none;
+    cursor: default;
+    color:  #fff;
+    font-size: 20px;
+}
+.title-header
+{
+    height: 56px;
+    background:  #f8f8f8;
+    margin-top: 32px;
+    font-size: 23px;
+    padding-top: 11px;
+}
+.title-header .on
+{
+    font-weight: bold;
+}
+.menu
+{
+    background: #f0f0f0;
+    height: 36px;
+    border-top: 1px solid #ccc;
+}
+.menu .container ul li
+{
+    padding: 0px;
+}
+.menu .container ul li a
+{
+    border-left: 1px solid #555;
+    /* border-right: 1px solid #555; */
+    /* padding-left: 10px; */
+    padding: 9px 30px 6px 30px;
+}
+.menu .container ul li a:hover
+{
+    background: #0086c8;
+    color: #fff;
+}
+
+/* CONTENT */
+#content
+{
+    border-top: 1px solid #555;
+}
+#content .wp-map
+{
+    padding-top: 20px;
+}
+#content .wp-map .citymain .box1
+{
+    height: 234px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+#content .wp-map .citymain .box2
+{
+    height: 166px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+#content .wp-map .map
+{
+    height: 415px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+#content .forecast
+{
+    background: #f8f8f8;
+    margin-top: 25px;
+}
+#content .forecast .wp-forecast
+{
+    padding-top: 15px;
+}
+#content .forecast .weather
+{
+    padding-top: 15px;
+    /* height: 130px; */
+    text-align: center;
+}
+#content .forecast .weather .week
+{
+    display: inline-block;
+    width: 80px;
+}
+#content .forecast .abc
+{
+    height: 1px;
+    background: #888888;
+    width: 60%;
+}
+#content .search-city
+{
+    margin-top: 10px;
+    
+}
+#content .search-city .title-search-city
+{
+    background: #f8f8f8;
+    border-top: 1px solid #888888;
+    border-bottom: 1px solid #888888;
+}
+#content .search-city .container .view-search
+{
+    padding-top: 15px;
+}
+#content .search-city .container .view-search .full-page-search
+{
+    text-align: center;
+}
+#content .search-city .container .view-search .full-page-search label
+{
+    color: #0086c8;
+}
+#content .search-city .container .view-search .full-page-search #btn_local
+{
+    margin-top: 10px;
+    color: #0086c8;
+}
+#content .search-city .container .history .history-city
+{
+    background: #009966;
+    height: 57px;
+    width: 880px;
+    border-radius: 5px;
+    margin-left: 125px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+#content .about .title-about
+{
+    background: #f8f8f8;
+    border-top: 1px solid #888888;
+    border-bottom: 1px solid #888888;
+}
+
+/* FOOTER */
+#footer
+{
+    
+}
+#footer .top-footer
+{
+    background: #0086c8;
+    border-top: 1px solid #888888;
+    border-bottom: 1px solid #888888;
+    position: relative;
+}
+#footer .top-footer ul li
+{
+    padding: 0px;
+}
+#footer .top-footer ul li a
+{
+    color: #fff;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+#footer .top-footer ul li a:hover
+{
+    background: #7fc2e3;
+}
+.btn-top {
+    background-image: url(btn_top.png);
+    background-repeat: no-repeat;
+    border: medium none;
+    bottom: 20px;
+    cursor: pointer;
+    display: none;
+    height: 50px;
+    outline: medium none;
+    padding: 0;
+    position: fixed;
+    right: 20px;
+    width: 50px;
+    z-index: 9999;
+}
